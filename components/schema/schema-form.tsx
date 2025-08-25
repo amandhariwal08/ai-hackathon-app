@@ -18,7 +18,6 @@ import { Loader2, Trash2 } from "lucide-react";
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { OutputSchema, SchemasResponse } from "./schema-table";
 
 // 1. Update schema to include schema_name
 const entrySchema = z.object({
@@ -34,7 +33,6 @@ const formSchema = z.object({
 type FormValues = z.infer<typeof formSchema>;
 
 export default function SchemaForm({ schemaUuid }: { schemaUuid?: string }) {
-  const [schemaData, setSchemaData] = useState<OutputSchema | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
 
   const { data: session } = useSession();
@@ -42,7 +40,7 @@ export default function SchemaForm({ schemaUuid }: { schemaUuid?: string }) {
 
   const router = useRouter();
 
-  const { control, handleSubmit, reset, watch } = useForm<FormValues>({
+  const { control, handleSubmit, reset } = useForm<FormValues>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       schema_name: "",
@@ -50,7 +48,7 @@ export default function SchemaForm({ schemaUuid }: { schemaUuid?: string }) {
     },
   });
 
-  const { fields, append, remove, replace } = useFieldArray({
+  const { fields, append, remove } = useFieldArray({
     control,
     name: "entries",
   });
@@ -93,7 +91,6 @@ export default function SchemaForm({ schemaUuid }: { schemaUuid?: string }) {
 
       const data = await res.json();
       const output = data.output_schema;
-      setSchemaData(output);
 
       // Transform schema object to entries array
       const entries = Object.entries(output.schema).map(
@@ -102,8 +99,6 @@ export default function SchemaForm({ schemaUuid }: { schemaUuid?: string }) {
           description: String(description),
         })
       );
-
-      console.log(entries);
 
       // Reset the form with the mapped data
       reset({
@@ -127,7 +122,7 @@ export default function SchemaForm({ schemaUuid }: { schemaUuid?: string }) {
 
   useEffect(() => {
     if (schemaUuid) getSchema(schemaUuid);
-  }, [schemaUuid]);
+  }, [schemaUuid, getSchema]);
 
   return (
     <div className="min-h-screen bg-background p-8">

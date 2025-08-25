@@ -1,17 +1,12 @@
 "use client";
-import { Card, CardContent, CardFooter } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import DashboardLayout from "../layout/dashboard-layout";
-import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
 import { useRef } from "react";
-import {
-  OutputSchema,
-  SchemasResponse,
-} from "@/components/schema/schema-table";
+import { SchemasResponse } from "@/components/schema/schema-table";
 import {
   Select,
   SelectContent,
@@ -21,6 +16,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import { Loader2 } from "lucide-react";
 
 type GetExcelSheetsResponse = {
   message: string;
@@ -39,7 +35,7 @@ export default function Page() {
     { label: string; value: string }[]
   >([]);
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
+  // const [error, setError] = useState<string | null>(null);
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
 
@@ -49,7 +45,7 @@ export default function Page() {
   async function fetchSchemas() {
     try {
       setLoading(true);
-      setError(null);
+      // setError(null);
       const res = await fetch(
         `/api/schema/get-all-schemas?userUuid=${userUuid}`
       );
@@ -62,8 +58,8 @@ export default function Page() {
           value: schema.schema_uuid,
         }))
       );
-    } catch (err: any) {
-      setError(err.message || "Unknown error");
+    } catch {
+      // setError(err || "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -87,7 +83,7 @@ export default function Page() {
 
     formData.append("files", file);
 
-    const isCSV = file.name.endsWith(".csv") || file.type === "text/csv";
+    // const isCSV = file.name.endsWith(".csv") || file.type === "text/csv";
 
     // Append sync_metadata as a JSON string
     formData.append("sync_metadata", JSON.stringify(syncMetadata));
@@ -161,6 +157,8 @@ export default function Page() {
       if (!res.ok) {
         const errorData = await res.json();
         // alert(errorData.error || "Upload failed");
+        console.log(errorData);
+
         return;
       }
 
@@ -170,6 +168,8 @@ export default function Page() {
       // alert("Upload successful!");
       // handle response as needed
     } catch (err) {
+      console.log(err);
+
       // alert("An error occurred during upload.");
     }
   }
@@ -186,10 +186,6 @@ export default function Page() {
       setTimeout(() => handleUpload(file), 0);
     }
   }
-
-  // useEffect(() => {
-  //   fetchSchemas();
-  // }, [session]);
 
   return (
     <DashboardLayout title="File Upload">
@@ -276,7 +272,10 @@ export default function Page() {
                 </Select>
               </div>
             </div>
-            <Button onClick={handleSubmitSync}>Sync and download file</Button>
+
+            <Button onClick={handleSubmitSync}>
+              {loading ? <Loader2 /> : "Sync and download file"}
+            </Button>
           </div>
         ) : null}
       </div>

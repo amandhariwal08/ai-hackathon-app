@@ -17,7 +17,6 @@ import {
 } from "@/components/ui/sidebar";
 import { LogOut, MoreVertical } from "lucide-react";
 import { signOut } from "next-auth/react";
-import { useRouter } from "next/navigation";
 
 export function NavUser({
   user,
@@ -29,7 +28,6 @@ export function NavUser({
   };
 }) {
   const { isMobile } = useSidebar();
-  const router = useRouter();
 
   return (
     <SidebarMenu>

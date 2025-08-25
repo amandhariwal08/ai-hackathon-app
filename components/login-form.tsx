@@ -63,8 +63,8 @@ export function LoginForm({
       } else {
         router.replace("/");
       }
-    } catch (error: any) {
-      console.log(error);
+    } catch {
+      // console.log();
     }
   }
   return (

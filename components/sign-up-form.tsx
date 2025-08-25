@@ -14,7 +14,6 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import {
   Form,
   FormControl,
-  FormDescription,
   FormField,
   FormItem,
   FormLabel,
@@ -22,7 +21,6 @@ import {
 } from "./ui/form";
 import { Eye, EyeOff } from "lucide-react";
 import { useState } from "react";
-import bcrypt from "bcryptjs";
 import { signIn } from "next-auth/react";
 
 const signUpFormSchema = z.object({
@@ -65,7 +63,7 @@ export function SignUpForm({
 
   async function onSubmit(values: z.infer<typeof signUpFormSchema>) {
     // Hash the password before using/sending it
-    const hashedPassword = await bcrypt.hash(values.password, 10); // 10 is the salt rounds
+    // const hashedPassword = await bcrypt.hash(values.password, 10); // 10 is the salt rounds
     const payload = {
       user_firstname: values.firstName,
       user_lastname: values.lastName,
@@ -98,6 +96,9 @@ export function SignUpForm({
           password: values.password,
           callbackUrl: "/",
         });
+        if (response?.error) {
+          console.error(response.error);
+        }
       } else {
         // Redirect or show success
         // window.location.href = "/";
@@ -106,9 +107,7 @@ export function SignUpForm({
       // 4. Handle success (redirect, show message, etc.)
       // alert("Sign up successful!");
       // Optionally redirect to login or home
-    } catch (error: any) {
-      console.log(error);
-
+    } catch {
       // alert("An error occurred: " + error.message);
     }
   }

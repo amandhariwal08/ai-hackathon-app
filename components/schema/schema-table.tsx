@@ -1,25 +1,16 @@
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
-  TableFooter,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { EllipsisVertical, Loader2, Trash2 } from "lucide-react";
+import { Loader2, Trash2 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "../ui/button";
 import { useRouter } from "next/navigation";
 import { useSession } from "next-auth/react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
 import { Card, CardContent } from "../ui/card";
 import {
   AlertDialog,
@@ -67,8 +58,8 @@ export function SchemaTable() {
       const data: SchemasResponse = await res.json();
 
       setSchemas(data.output_schemas);
-    } catch (err: any) {
-      setError(err.message || "Unknown error");
+    } catch {
+      // setError(err.message || "Unknown error");
     } finally {
       setLoading(false);
     }
@@ -90,7 +81,7 @@ export function SchemaTable() {
 
   useEffect(() => {
     fetchSchemas();
-  }, [userUuid]);
+  }, [userUuid, fetchSchemas]);
 
   return (
     <div className="p-4">

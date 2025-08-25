@@ -1,6 +1,14 @@
 import NextAuth from "next-auth";
 import CredentialsProvider from "next-auth/providers/credentials";
 
+type User = {
+  user_uuid: string;
+  user_email: string;
+  user_password: string;
+  user_firstname: string;
+  user_lastname: string;
+};
+
 const handler = NextAuth({
   providers: [
     CredentialsProvider({
@@ -21,8 +29,8 @@ const handler = NextAuth({
         const users = await res.json();
 
         // Find user with matching email and password
-        const user = users.users.find(
-          (u: any) =>
+        const user = (users.users as User[]).find(
+          (u) =>
             u.user_email === credentials?.email &&
             u.user_password === credentials?.password
         );

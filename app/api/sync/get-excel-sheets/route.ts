@@ -7,11 +7,9 @@ export async function POST(req: NextRequest) {
   // Prepare a new FormData to send to the backend
   const backendFormData = new FormData();
   // For each file, append to backendFormData with the key "file"
-  for (const [key, value] of formData.entries()) {
-    // Only forward files (not other fields)
-    if (value instanceof File) {
-      backendFormData.append("file", value, value.name);
-    }
+  const file = formData.get("file");
+  if (file instanceof File) {
+    backendFormData.append("file", file, file.name);
   }
 
   // Forward the request to the actual backend

@@ -81,7 +81,7 @@ export function SchemaTable() {
 
   useEffect(() => {
     fetchSchemas();
-  }, [userUuid, fetchSchemas]);
+  }, [userUuid]);
 
   return (
     <div className="p-4">

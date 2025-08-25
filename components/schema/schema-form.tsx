@@ -122,7 +122,7 @@ export default function SchemaForm({ schemaUuid }: { schemaUuid?: string }) {
 
   useEffect(() => {
     if (schemaUuid) getSchema(schemaUuid);
-  }, [schemaUuid, getSchema]);
+  }, [schemaUuid]);
 
   return (
     <div className="min-h-screen bg-background p-8">
